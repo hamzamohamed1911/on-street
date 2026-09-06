@@ -1,8 +1,9 @@
 "use client";
 
+import jsQR from "jsqr";
 import { QrCode } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/navigation";
@@ -16,57 +17,110 @@ type BarcodeDetectorCtor = new (options?: {
   formats?: string[];
 }) => BarcodeDetectorInstance;
 
+function getBarcodeDetector() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return (
+    window as unknown as { BarcodeDetector?: BarcodeDetectorCtor }
+  ).BarcodeDetector ?? null;
+}
+
+async function getCameraStream() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    throw new DOMException("Camera is not available", "NotSupportedError");
+  }
+
+  try {
+    return await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" } },
+      audio: false,
+    });
+  } catch {
+    return navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false,
+    });
+  }
+}
+
+async function readQrValue(
+  video: HTMLVideoElement,
+  canvas: HTMLCanvasElement,
+  detector: BarcodeDetectorInstance | null,
+) {
+  if (detector) {
+    const codes = await detector.detect(video);
+
+    if (codes[0]?.rawValue) {
+      return codes[0].rawValue;
+    }
+  }
+
+  const width = video.videoWidth;
+  const height = video.videoHeight;
+
+  if (!width || !height) {
+    return null;
+  }
+
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+
+  if (!context) {
+    return null;
+  }
+
+  context.drawImage(video, 0, 0, width, height);
+  const image = context.getImageData(0, 0, width, height);
+
+  return (
+    jsQR(image.data, width, height, { inversionAttempts: "attemptBoth" })?.data ??
+    null
+  );
+}
+
 export function ScanQr() {
   const t = useTranslations("HomePage");
   const router = useRouter();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [cameraError, setCameraError] = useState<
     "denied" | "unsupported" | null
   >(null);
 
   useEffect(() => {
-    if (!isScanning) {
+    if (!isScanning || !video) {
       return;
     }
 
-    const videoEl = videoRef.current;
-    const Detector = (
-      window as unknown as { BarcodeDetector?: BarcodeDetectorCtor }
-    ).BarcodeDetector;
-
-    if (!videoEl || !Detector) {
-      const frameId = requestAnimationFrame(() => {
-        setCameraError("unsupported");
-        setIsScanning(false);
-      });
-
-      return () => cancelAnimationFrame(frameId);
-    }
-
-    const video: HTMLVideoElement = videoEl;
+    const preview: HTMLVideoElement = video;
+    const Detector = getBarcodeDetector();
+    const detector = Detector ? new Detector({ formats: ["qr_code"] }) : null;
+    const canvas = document.createElement("canvas");
     let cancelled = false;
     let stream: MediaStream | undefined;
     let frameId = 0;
     let lastInvalidValue = "";
-    const detector = new Detector({ formats: ["qr_code"] });
 
     function stop() {
       cancelAnimationFrame(frameId);
       stream?.getTracks().forEach((track) => track.stop());
-      video.srcObject = null;
+      preview.srcObject = null;
     }
 
     async function scan() {
-      if (cancelled || video.readyState < 2) {
+      if (cancelled || preview.readyState < 2) {
         frameId = requestAnimationFrame(() => {
           void scan();
         });
         return;
       }
 
-      const codes = await detector.detect(video);
-      const qrId = codes[0] ? parseQrId(codes[0].rawValue) : null;
+      const rawValue = await readQrValue(preview, canvas, detector);
+      const qrId = rawValue ? parseQrId(rawValue) : null;
 
       if (qrId) {
         stop();
@@ -75,8 +129,8 @@ export function ScanQr() {
         return;
       }
 
-      if (codes[0] && !qrId && codes[0].rawValue !== lastInvalidValue) {
-        lastInvalidValue = codes[0].rawValue;
+      if (rawValue && !qrId && rawValue !== lastInvalidValue) {
+        lastInvalidValue = rawValue;
         toast.error(t("scanInvalid"));
       }
 
@@ -85,11 +139,7 @@ export function ScanQr() {
       });
     }
 
-    void navigator.mediaDevices
-      .getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
-        audio: false,
-      })
+    void getCameraStream()
       .then((mediaStream) => {
         if (cancelled) {
           mediaStream.getTracks().forEach((track) => track.stop());
@@ -97,26 +147,29 @@ export function ScanQr() {
         }
 
         stream = mediaStream;
-        video.srcObject = mediaStream;
-        return video.play();
+        preview.srcObject = mediaStream;
+        return preview.play();
       })
       .then(() => {
         if (!cancelled) {
           void scan();
         }
       })
-      .catch(() => {
-        if (!cancelled) {
-          setCameraError("denied");
-          setIsScanning(false);
+      .catch((error: unknown) => {
+        if (cancelled) {
+          return;
         }
+
+        const name = error instanceof DOMException ? error.name : "";
+        setCameraError(name === "NotSupportedError" ? "unsupported" : "denied");
+        setIsScanning(false);
       });
 
     return () => {
       cancelled = true;
       stop();
     };
-  }, [isScanning, router, t]);
+  }, [isScanning, router, t, video]);
 
   function closeScanner() {
     setIsScanning(false);
@@ -127,17 +180,17 @@ export function ScanQr() {
       <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary-500/10 text-primary-500">
         <QrCode className="size-7" />
       </div>
-      <h1 className="mt-4 text-xl font-extrabold text-foreground text-center">
+      <h1 className="mt-4 text-center text-xl font-extrabold text-foreground">
         {t("scanTitle")}
       </h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground text-center">
+      <p className="mt-2 text-center text-sm leading-relaxed text-muted-foreground">
         {t("scanDescription")}
       </p>
       <Button
         type="button"
         size="lg"
         className="mt-6 w-full"
-        disabled={cameraError != null}
+        disabled={isScanning}
         onClick={() => {
           setCameraError(null);
           setIsScanning(true);
@@ -148,13 +201,13 @@ export function ScanQr() {
       </Button>
 
       {cameraError === "denied" ? (
-        <p className="mt-3 text-xs leading-relaxed text-destructive text-center">
+        <p className="mt-3 text-center text-xs leading-relaxed text-destructive">
           {t("scanPermissionDenied")}
         </p>
       ) : null}
 
       {cameraError === "unsupported" ? (
-        <p className="mt-3 text-xs leading-relaxed text-destructive text-center">
+        <p className="mt-3 text-center text-xs leading-relaxed text-destructive">
           {t("scanUnsupported")}
         </p>
       ) : null}
@@ -164,7 +217,7 @@ export function ScanQr() {
           <div className="mx-auto flex w-full max-w-md flex-1 flex-col">
             <div className="relative overflow-hidden rounded-2xl bg-black">
               <video
-                ref={videoRef}
+                ref={setVideo}
                 className="aspect-square w-full object-cover"
                 playsInline
                 muted
