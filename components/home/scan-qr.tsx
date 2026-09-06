@@ -130,13 +130,14 @@ export function ScanQr() {
       <h1 className="mt-4 text-xl font-extrabold text-foreground text-center">
         {t("scanTitle")}
       </h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground text-center">
         {t("scanDescription")}
       </p>
       <Button
         type="button"
         size="lg"
         className="mt-6 w-full"
+        disabled={cameraError != null}
         onClick={() => {
           setCameraError(null);
           setIsScanning(true);
@@ -147,13 +148,13 @@ export function ScanQr() {
       </Button>
 
       {cameraError === "denied" ? (
-        <p className="mt-3 text-xs leading-relaxed text-destructive">
+        <p className="mt-3 text-xs leading-relaxed text-destructive text-center">
           {t("scanPermissionDenied")}
         </p>
       ) : null}
 
       {cameraError === "unsupported" ? (
-        <p className="mt-3 text-xs leading-relaxed text-destructive">
+        <p className="mt-3 text-xs leading-relaxed text-destructive text-center">
           {t("scanUnsupported")}
         </p>
       ) : null}
