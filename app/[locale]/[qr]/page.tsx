@@ -1,11 +1,43 @@
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { BackToScan } from "@/components/home/back-to-scan";
-import { BookingSteps } from "@/components/home/booking-steps";
+import { BookingPanel } from "@/components/home/booking-panel";
 import { BookingSummary } from "@/components/home/booking-summary";
+import { ZoneCardSkeleton } from "@/components/home/zone-card-skeleton";
 import { routing } from "@/i18n/routing";
+import { fetchZone } from "@/lib/api/zones";
+
+
+
+export async function generateMetadata({
+  params,
+}: BookingPageProps): Promise<Metadata> {
+  const { locale, qr } = await params;
+  const safeLocale = hasLocale(routing.locales, locale)
+    ? locale
+    : routing.defaultLocale;
+  const t = await getTranslations({ locale: safeLocale, namespace: "HomePage" });
+
+  try {
+    const zone = await fetchZone(qr);
+    const title = t("title", { name: zone.name });
+  
+
+    return {
+      title,
+      openGraph: {
+        title
+      },
+    };
+  } catch {
+    return {
+      title: t("title"),
+    };
+  }
+}
 
 type BookingPageProps = {
   params: Promise<{ locale: string; qr: string }>;
@@ -26,8 +58,8 @@ export default async function BookingPage({ params }: BookingPageProps) {
         <BackToScan />
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
           <section className="rounded-2xl bg-card p-5 text-start text-card-foreground shadow-lg sm:p-6">
-            <Suspense>
-              <BookingSteps qrId={qr} />
+            <Suspense fallback={<ZoneCardSkeleton />}>
+              <BookingPanel qrId={qr} />
             </Suspense>
           </section>
           <BookingSummary />

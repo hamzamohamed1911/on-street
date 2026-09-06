@@ -11,6 +11,7 @@ import {
   type BookingStep,
 } from "@/lib/booking-steps";
 import { getLocaleDirection } from "@/i18n/routing";
+import type { ParkingZone } from "@/lib/zones";
 import { cn } from "@/lib/utils/cn";
 
 const stepCopy = {
@@ -32,10 +33,11 @@ const stepCopy = {
 } as const;
 
 type BookingStepsProps = {
-  qrId: string;
+  zone: ParkingZone | null;
+  zoneError?: string | null;
 };
 
-export function BookingSteps({ qrId }: BookingStepsProps) {
+export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
   const t = useTranslations("HomePage");
   const locale = useLocale();
   const dir = getLocaleDirection(locale);
@@ -104,7 +106,7 @@ export function BookingSteps({ qrId }: BookingStepsProps) {
               {t(copy.contentTitleKey)}
             </h2>
             {value === "1" ? (
-              <ZoneList qrId={qrId} />
+              <ZoneList zone={zone} error={zoneError} />
             ) : (
               <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground">
                 {t(copy.contentDescriptionKey)}

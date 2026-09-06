@@ -1,31 +1,22 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { ZoneCard } from "@/components/home/zone-card";
-import { ZoneCardSkeleton } from "@/components/home/zone-card-skeleton";
-import { fetchZone } from "@/lib/api/zones";
+import type { ParkingZone } from "@/lib/zones";
 
 type ZoneListProps = {
-  qrId: string;
+  zone: ParkingZone | null;
+  error?: string | null;
 };
 
-export function ZoneList({ qrId }: ZoneListProps) {
+export function ZoneList({ zone, error }: ZoneListProps) {
   const t = useTranslations("HomePage");
   const [zoneId, setZoneId] = useQueryState(
     "zone",
     parseAsInteger.withOptions({ history: "replace" }),
   );
-
-  const zoneQuery = useQuery({
-    queryKey: ["zone", qrId],
-    queryFn: () => fetchZone(qrId),
-    enabled: Boolean(qrId),
-  });
-
-  const zone = zoneQuery.data;
 
   useEffect(() => {
     if (zone && zoneId !== zone.id) {
@@ -39,18 +30,8 @@ export function ZoneList({ qrId }: ZoneListProps) {
         {t("zoneTimeDescription")}
       </p>
 
-      {zoneQuery.isPending ? (
-        <div className="mt-4">
-          <ZoneCardSkeleton />
-        </div>
-      ) : null}
-
-      {zoneQuery.isError ? (
-        <p className="mt-4 text-xs text-destructive">
-          {zoneQuery.error instanceof Error
-            ? zoneQuery.error.message
-            : t("zonesError")}
-        </p>
+      {error ? (
+        <p className="mt-4 text-xs text-destructive">{error}</p>
       ) : null}
 
       {zone ? (
