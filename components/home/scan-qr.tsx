@@ -30,12 +30,12 @@ export function ScanQr() {
       return;
     }
 
-    const video = videoRef.current;
+    const videoEl = videoRef.current;
     const Detector = (
       window as unknown as { BarcodeDetector?: BarcodeDetectorCtor }
     ).BarcodeDetector;
 
-    if (!video || !Detector) {
+    if (!videoEl || !Detector) {
       const frameId = requestAnimationFrame(() => {
         setCameraError("unsupported");
         setIsScanning(false);
@@ -44,6 +44,7 @@ export function ScanQr() {
       return () => cancelAnimationFrame(frameId);
     }
 
+    const video: HTMLVideoElement = videoEl;
     let cancelled = false;
     let stream: MediaStream | undefined;
     let frameId = 0;
