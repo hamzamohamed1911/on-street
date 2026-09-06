@@ -127,7 +127,7 @@ export function ScanQr() {
       <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-primary-500/10 text-primary-500">
         <QrCode className="size-7" />
       </div>
-      <h1 className="mt-4 text-xl font-extrabold text-foreground">
+      <h1 className="mt-4 text-xl font-extrabold text-foreground text-center">
         {t("scanTitle")}
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
