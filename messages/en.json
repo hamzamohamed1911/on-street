@@ -1,0 +1,60 @@
+{
+  "Metadata": {
+    "title": "On Street Parking",
+    "titleTemplate": "%s · On Street Parking",
+    "description": "On-street parking."
+  },
+  "HomePage": {
+    "title": "On Street Parking",
+    "description": "Find and manage on-street parking.",
+    "scanTitle": "Scan the parking QR code",
+    "scanDescription": "Point your camera at the QR code on the parking sign. We will open that parking zone so you can book a spot.",
+    "scanButton": "Scan QR code",
+    "scanCancel": "Cancel",
+    "scanHint": "Align the QR code inside the frame",
+    "scanPermissionDenied": "Camera access is disabled. Enable it from your browser settings to scan the QR code.",
+    "scanUnsupported": "QR scanning is not supported in this browser. Open this page on your phone camera or a supported browser.",
+    "scanInvalid": "This QR code is not valid. Please scan the parking sign again.",
+    "stepLabel": "Step {number}",
+    "zoneTime": "Zone & time",
+    "personalData": "Personal data",
+    "payment": "Payment",
+    "backToScan": "Scan another zone",
+    "zoneTimeTitle": "Parking zone",
+    "zoneTimeDescription": "This is the zone from the QR code you scanned.",
+    "searchZones": "Search zones",
+    "clearSearch": "Clear search",
+    "zonesLoading": "Loading zones…",
+    "zonesEmpty": "Zone not found.",
+    "zonesError": "Unable to load zone.",
+    "hours24": "24 hours",
+    "perHour": "/ hour",
+    "personalDataTitle": "Personal data",
+    "personalDataDescription": "Enter your personal details to continue your booking.",
+    "paymentTitle": "Payment",
+    "paymentDescription": "Choose a payment method to complete your booking.",
+    "summaryTitle": "Summary",
+    "summaryDescription": "Your booking details will appear here."
+  },
+  "Header": {
+    "logoAlt": "On Street Parking",
+    "home": "Home"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "ThemeSwitcher": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "NotFound": {
+    "code": "Error 404",
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist or may have been moved.",
+    "backHome": "Back to home"
+  }
+}

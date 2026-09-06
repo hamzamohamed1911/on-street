@@ -1,0 +1,24 @@
+export type ParkingZone = {
+  id: number;
+  reference: string;
+  name: string;
+  site_name: string;
+  latitude: string | number | null;
+  longitude: string | number | null;
+  geofence_radius_m: number;
+  max_booking_hours: number;
+  parking_spots: number;
+  start_time: string;
+  end_time: string;
+  coord_a_latitude: string | number | null;
+  coord_a_longitude: string | number | null;
+  coord_b_latitude: string | number | null;
+  coord_b_longitude: string | number | null;
+  coord_c_latitude: string | number | null;
+  coord_c_longitude: string | number | null;
+  coord_d_latitude: string | number | null;
+  coord_d_longitude: string | number | null;
+  hourly_rate: number;
+  additional_fee: number;
+  currency: string;
+};

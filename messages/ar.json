@@ -1,0 +1,60 @@
+{
+  "Metadata": {
+    "title": "مواقف على الشارع",
+    "titleTemplate": "%s · مواقف على الشارع",
+    "description": "مواقف السيارات على الشارع."
+  },
+  "HomePage": {
+    "title": "مواقف على الشارع",
+    "description": "ابحث عن مواقف السيارات على الشارع وأدرها.",
+    "scanTitle": "امسح رمز QR للموقف",
+    "scanDescription": "وجّه الكاميرا نحو رمز QR الموجود على لوحة الموقف. سنفتح منطقة ذلك الموقف لتتمكن من حجز مكان.",
+    "scanButton": "مسح رمز QR",
+    "scanCancel": "إلغاء",
+    "scanHint": "ضع رمز QR داخل الإطار",
+    "scanPermissionDenied": "تم تعطيل الوصول إلى الكاميرا. فعّله من إعدادات المتصفح لمسح رمز QR.",
+    "scanUnsupported": "مسح رمز QR غير مدعوم في هذا المتصفح. افتح الصفحة من كاميرا هاتفك أو من متصفح مدعوم.",
+    "scanInvalid": "رمز QR غير صالح. يرجى مسح لوحة الموقف مرة أخرى.",
+    "stepLabel": "الخطوة {number}",
+    "zoneTime": "المنطقة والوقت",
+    "personalData": "البيانات الشخصية",
+    "payment": "الدفع",
+    "backToScan": "مسح منطقة أخرى",
+    "zoneTimeTitle": "منطقة الوقوف",
+    "zoneTimeDescription": "هذه هي المنطقة من رمز QR الذي تم مسحه.",
+    "searchZones": "ابحث عن منطقة",
+    "clearSearch": "مسح البحث",
+    "zonesLoading": "جاري تحميل المناطق…",
+    "zonesEmpty": "المنطقة غير موجودة.",
+    "zonesError": "تعذر تحميل المنطقة.",
+    "hours24": "24 ساعة",
+    "perHour": "/ الساعة",
+    "personalDataTitle": "البيانات الشخصية",
+    "personalDataDescription": "أدخل بياناتك الشخصية لمتابعة الحجز.",
+    "paymentTitle": "الدفع",
+    "paymentDescription": "اختر طريقة الدفع لإتمام الحجز.",
+    "summaryTitle": "الملخص",
+    "summaryDescription": "ستظهر تفاصيل حجزك هنا."
+  },
+  "Header": {
+    "logoAlt": "مواقف على الشارع",
+    "home": "الرئيسية"
+  },
+  "LocaleSwitcher": {
+    "label": "اللغة",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "ThemeSwitcher": {
+    "label": "المظهر",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "تلقائي"
+  },
+  "NotFound": {
+    "code": "خطأ 404",
+    "title": "الصفحة غير موجودة",
+    "description": "الصفحة التي تبحث عنها غير موجودة أو ربما تم نقلها.",
+    "backHome": "العودة للرئيسية"
+  }
+}

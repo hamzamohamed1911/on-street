@@ -1,0 +1,125 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ebebeb;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #744c8a;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --surface-subtle: #f7f7f7;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card: #141414;
+  --card-foreground: #ededed;
+  --popover: #141414;
+  --popover-foreground: #ededed;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #744c8a;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --surface-subtle: #181818;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-surface-subtle: var(--surface-subtle);
+
+  --color-primary-50: #f1edf3;
+  --color-primary-100: #d4c8db;
+  --color-primary-200: #bfadc9;
+  --color-primary-300: #a287b1;
+  --color-primary-400: #9070a1;
+  --color-primary-500: #744c8a;
+  --color-primary-600: #6a457e;
+  --color-primary-700: #523662;
+  --color-primary-800: #402a4c;
+  --color-primary-900: #31203a;
+  --color-primary: var(--color-primary-500);
+  --color-primary-foreground: var(--color-natural-25);
+
+  --color-secondary-50: #f1f5f8;
+  --color-secondary-100: #d4dfe8;
+  --color-secondary-200: #bfcfdd;
+  --color-secondary-300: #a1b9cd;
+  --color-secondary-400: #8facc4;
+  --color-secondary-500: #7397b5;
+  --color-secondary-600: #6989a5;
+  --color-secondary-700: #526b81;
+  --color-secondary-800: #3f5364;
+  --color-secondary-900: #303f4c;
+  --color-secondary: var(--color-secondary-500);
+
+  --color-natural-25: #ffffff;
+  --color-natural-50: #fdfdfd;
+  --color-natural-100: #f9f9fa;
+  --color-natural-200: #f6f7f7;
+  --color-natural-300: #f2f3f4;
+  --color-natural-400: #f0f1f1;
+  --color-natural-500: #ecedee;
+  --color-natural-600: #d7d8d9;
+  --color-natural-700: #a8a8a9;
+  --color-natural-800: #828283;
+  --color-natural-900: #636464;
+  --color-natural-950: #434343;
+  --color-natural-1000: #333333;
+  --color-natural: var(--color-natural-500);
+
+  --font-sans: var(--font-almarai);
+  --font-arabic: var(--font-almarai);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply min-h-full bg-linear-to-b from-primary-500 to-secondary-500;
+  }
+
+  html.dark,
+  html.dark body {
+    @apply bg-background;
+    background-image: none;
+  }
+
+  body {
+    @apply min-h-dvh text-natural-25;
+  }
+}
