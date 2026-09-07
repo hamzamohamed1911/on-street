@@ -15,11 +15,11 @@ export function ZoneCard({ zone }: ZoneCardProps) {
   const rate = formatHourlyRate(zone.hourly_rate);
 
   return (
-    <article className="relative flex flex-col rounded-xl border border-primary-500 bg-card p-4 text-start shadow-sm ring-1 ring-primary-500/20">
+    <article className="relative max-w-md flex flex-col rounded-xl border border-primary-500 bg-card p-4 text-start shadow-sm ring-1 ring-primary-500/20">
       <div>
-        <h3 className="text-sm font-extrabold text-foreground">{zone.name}</h3>
+        <h3 className="text-sm font-extrabold text-foreground">{zone.site_name}</h3>
         <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-          {zone.site_name || zone.name}
+          { zone.name || zone.site_name }
         </p>
       </div>
 

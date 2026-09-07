@@ -23,7 +23,7 @@ export async function generateMetadata({
 
   try {
     const zone = await fetchZone(qr);
-    const title = t("title", { name: zone.name });
+    const title =   zone.site_name 
   
 
     return {

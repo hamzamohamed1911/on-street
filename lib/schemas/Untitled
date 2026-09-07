@@ -1,0 +1,77 @@
+import { z } from "zod";
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidPhoneNumberForCountry,
+} from "@/lib/utils/phone";
+
+const NAME_LETTERS_REGEX = /^[\p{L}\s]+$/u;
+const MIN_AGE_YEARS = 18;
+
+function getAge(birthDate: Date): number {
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+  return age;
+}
+
+type TranslateFn = (key: string) => string;
+
+export const createRegisterSchema = (t: TranslateFn) =>
+  z
+    .object({
+      name: z
+        .string()
+        .min(1, t("validation-field-required"))
+        .min(3, t("validation-name-min-length"))
+        .max(100, t("validation-name-max-length"))
+        .regex(NAME_LETTERS_REGEX, t("validation-name-letters-only")),
+      email: z
+        .string()
+        .min(1, t("validation-field-required"))
+        .email(t("validation-email-invalid")),
+      phone_country: z
+        .string()
+        .min(1, t("validation-field-required"))
+        .regex(/^\+\d{1,4}$/, t("validation-phone-invalid")),
+      phone_number: z.string().min(1, t("validation-field-required")),
+      birth_date: z
+        .string()
+        .min(1, t("validation-field-required"))
+        .refine(
+          (value) => !Number.isNaN(Date.parse(value)),
+          t("validation-date-invalid"),
+        )
+        .refine(
+          (value) => getAge(new Date(value)) >= MIN_AGE_YEARS,
+          t("validation-age-minimum"),
+        ),
+      agreement_accepted: z
+        .boolean()
+        .refine((value) => value === true, t("validation-field-required")),
+    })
+    .superRefine((data, ctx) => {
+      if (!isValidPhoneNumberForCountry(data.phone_country, data.phone_number)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["phone_number"],
+          message: t("validation-phone-invalid"),
+        });
+      }
+    });
+
+export type RegisterInput = z.infer<ReturnType<typeof createRegisterSchema>>;
+
+export const registerDefaultValues: RegisterInput = {
+  name: "",
+  email: "",
+  phone_country: DEFAULT_PHONE_COUNTRY,
+  phone_number: "",
+  birth_date: "",
+  agreement_accepted: false,
+};

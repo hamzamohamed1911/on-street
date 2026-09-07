@@ -34,7 +34,18 @@
     "paymentTitle": "الدفع",
     "paymentDescription": "اختر طريقة الدفع لإتمام الحجز.",
     "summaryTitle": "الملخص",
-    "summaryDescription": "ستظهر تفاصيل حجزك هنا."
+    "summaryDescription": "ستظهر تفاصيل حجزك هنا.",
+    "validation-zone-required": "يرجى اختيار منطقة الوقوف.",
+    "validation-plate-required": "يرجى إدخال رقم لوحة المركبة.",
+    "validation-field-required": "هذا الحقل مطلوب.",
+    "validation-phone-required": "يرجى إدخال رقم الهاتف.",
+    "validation-hours-required": "يرجى اختيار مدة الوقوف.",
+    "validation-phone-invalid": "يرجى إدخال رقم هاتف صحيح.",
+    "phone-country-search": "ابحث عن دولة",
+    "phone-placeholder": "أدخل رقم هاتفك",
+    "contact-information":"معلومات التواصل",
+    "plate-number":"رقم اللوحة",
+    "plate-order":"يرجى التأكد من إدخال رقم اللوحة بنفس ترتيب لوحتك"
   },
   "Header": {
     "logoAlt": "مواقف على الشارع",

@@ -4,6 +4,8 @@ import { useLocale, useTranslations } from "next-intl";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { ZoneList } from "@/components/home/zone-list";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BOOKING_STEPS,
@@ -13,6 +15,17 @@ import {
 import { getLocaleDirection } from "@/i18n/routing";
 import type { ParkingZone } from "@/lib/zones";
 import { cn } from "@/lib/utils/cn";
+import PersonalData from "./PersonalData";
+import { useForm } from "react-hook-form";
+
+import { Form } from "@/components/ui/form";
+import { useMutation } from "@tanstack/react-query";
+import {
+  bookingDefaultValues,
+  BookingInput,
+  createBookingSchema,
+} from "@/lib/schemas/booking.schema";
+import { submitBooking } from "@/lib/api/zones";
 
 const stepCopy = {
   "1": {
@@ -66,7 +79,26 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
   function handleStepChange(value: string) {
     void setStep(value as BookingStep);
   }
+  const schema = createBookingSchema((key) => t(key as never));
+  const form = useForm<BookingInput>({
+    resolver: zodResolver(schema),
+    defaultValues: bookingDefaultValues,
+  });
 
+  const registerMutation = useMutation({
+    mutationFn: submitBooking,
+    onMutate: () => {
+      form.clearErrors();
+    },
+    onSuccess: () => {},
+    onError: () => {},
+  });
+
+  const isSubmitting = registerMutation.isPending;
+
+  function onSubmit(values: BookingInput) {
+    registerMutation.mutate(values);
+  }
   return (
     <Tabs
       dir={dir}
@@ -105,13 +137,19 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
             <h2 className="text-lg font-extrabold text-foreground">
               {t(copy.contentTitleKey)}
             </h2>
-            {value === "1" ? (
-              <ZoneList zone={zone} error={zoneError} />
-            ) : (
-              <p className="mt-2 max-w-xl text-xs leading-relaxed text-muted-foreground">
-                {t(copy.contentDescriptionKey)}
-              </p>
-            )}
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+                noValidate
+              >
+                {value === "1" ? (
+                  <ZoneList zone={zone} error={zoneError} />
+                ) : (
+                  <PersonalData isSubmitting={isSubmitting} form={form} />
+                )}
+              </form>
+            </Form>
           </TabsContent>
         );
       })}

@@ -1,0 +1,61 @@
+import { z } from "zod";
+
+import {
+  DEFAULT_PHONE_COUNTRY,
+  isValidPhoneNumberForCountry,
+} from "@/lib/utils/phone";
+
+type TranslateFn = (key: string) => string;
+export const createBookingSchema = (t: TranslateFn) =>
+  z
+    .object({
+      zone: z
+        .number()
+        .int()
+        .positive(t("validation-zone-required")),
+
+      plate: z
+        .string()
+        .trim()
+        .min(1, t("validation-plate-required")),
+
+      phone_country: z
+        .string()
+        .min(1, t("validation-field-required")),
+
+      phone: z
+        .string()
+        .trim()
+        .min(1, t("validation-phone-required")),
+
+      hours: z
+        .number()
+        .int()
+        .positive(t("validation-hours-required")),
+    })
+    .superRefine((data, ctx) => {
+      if (
+        !isValidPhoneNumberForCountry(
+          data.phone,
+          data.phone_country,
+        )
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["phone"],
+          message: t("validation-phone-invalid"),
+        });
+      }
+    });
+
+export type BookingInput = z.infer<
+  ReturnType<typeof createBookingSchema>
+>;
+
+export const bookingDefaultValues: BookingInput = {
+  zone: 0,
+  plate: "",
+  phone: "",
+  phone_country: DEFAULT_PHONE_COUNTRY,
+  hours: 0,
+};

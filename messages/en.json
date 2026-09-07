@@ -34,7 +34,19 @@
     "paymentTitle": "Payment",
     "paymentDescription": "Choose a payment method to complete your booking.",
     "summaryTitle": "Summary",
-    "summaryDescription": "Your booking details will appear here."
+    "summaryDescription": "Your booking details will appear here.",
+    "phone-placeholder": "Enter your phone number",
+    "validation-zone-required": "Please select a parking zone.",
+    "validation-plate-required": "Please enter the vehicle plate number.",
+    "validation-field-required": "This field is required.",
+    "validation-phone-required": "Please enter your phone number.",
+    "validation-hours-required": "Please select the parking duration.",
+    "validation-phone-invalid": "Please enter a valid phone number.",
+    "phone-country-search": "Search for a country",
+    "contact-information":"Contact information",
+    "plate-number":"Plate number",
+    "plate-order":"Please make sure to enter the plate number on the same order as on your plate"
+
   },
   "Header": {
     "logoAlt": "On Street Parking",
