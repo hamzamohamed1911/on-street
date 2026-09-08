@@ -47,40 +47,40 @@ const PersonalData = ({ form, isSubmitting }: PersonalDataProps) => {
 
       {/* Phone */}
       <FormField
-  control={form.control}
-  name="phone"
-  render={({ field }) => (
-    <FormItem>
-      <div className="flex items-center justify-start gap-1">
-        <FormLabel className="font-semibold">
-          {t("contact-information")}
-        </FormLabel>
-        <span className="text-2xl text-red-500">*</span>
-      </div>
+        control={form.control}
+        name="phone"
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex items-center justify-start gap-1">
+              <FormLabel className="font-semibold">
+                {t("contact-information")}
+              </FormLabel>
+              <span className="text-2xl text-red-500">*</span>
+            </div>
 
-      <FormControl>
-        <PhoneInputField
-          country={country}
-          phoneCountry={form.watch("phone_country")}
-          phoneNumber={field.value}
-          onPhoneCountryChange={(nextCountry) => {
-            setCountry(nextCountry);
+            <FormControl>
+              <PhoneInputField
+                country={country}
+                phoneCountry={form.watch("phone_country")}
+                phoneNumber={field.value}
+                onPhoneCountryChange={(nextCountry) => {
+                  setCountry(nextCountry);
 
-            form.setValue("phone_country", nextCountry, {
-              shouldValidate: true,
-              shouldDirty: true,
-            });
-          }}
-          onPhoneNumberChange={field.onChange}
-          disabled={isSubmitting}
-          placeholder={t("phone-placeholder")}
-        />
-      </FormControl>
+                  form.setValue("phone_country", nextCountry, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+                onPhoneNumberChange={field.onChange}
+                disabled={isSubmitting}
+                placeholder={t("phone-placeholder")}
+              />
+            </FormControl>
 
-      <FormMessage />
-    </FormItem>
-  )}
-/>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       {/* Plate */}
       <FormField
