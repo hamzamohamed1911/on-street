@@ -91,12 +91,16 @@ function getCountryLabels(locale: string): CountryLabels {
   return locale.startsWith("ar") ? countryLabels.ar : countryLabels.en;
 }
 
+
 export type PhoneInputFieldProps = {
-  phoneCountry: string;
+  phoneCountry: string; // +966 فقط للعرض
   phoneNumber: string;
   country?: Country;
+
   onPhoneCountryChange: (country: Country) => void;
+
   onPhoneNumberChange: (phoneNumber: string) => void;
+
   disabled?: boolean;
   placeholder?: string;
   "aria-label"?: string;

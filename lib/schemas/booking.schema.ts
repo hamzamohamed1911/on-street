@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import {
-  DEFAULT_PHONE_COUNTRY,
   isValidPhoneNumberForCountry,
 } from "@/lib/utils/phone";
 
@@ -56,6 +55,6 @@ export const bookingDefaultValues: BookingInput = {
   zone: 0,
   plate: "",
   phone: "",
-  phone_country: DEFAULT_PHONE_COUNTRY,
+  phone_country: "SA",
   hours: 0,
 };

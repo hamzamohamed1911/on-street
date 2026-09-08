@@ -82,7 +82,7 @@ const PersonalData = ({ form, isSubmitting }: PersonalDataProps) => {
         )}
       />
 
-      {/* Plate */}
+     
       <FormField
         control={form.control}
         name="plate"
