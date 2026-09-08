@@ -24,14 +24,16 @@ type BookingQuoteResponse = {
 export async function submitBooking(
   bookingBody: BookingInput,
 ): Promise<BookingQuoteResponse> {
-  const response = await fetch(`${API_URL}/api/public/bookings/quote/`, {
+  const response = await fetch(`${API_URL}/public/bookings/quote/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bookingBody),
   });
-  const data = (await response.json()) as BookingQuoteResponse;
+  const data = await response.json();
+
   if (!response.ok) {
-    throw new Error(data.detail || "Failed to submit booking");
+    throw data;
   }
+
   return data;
 }

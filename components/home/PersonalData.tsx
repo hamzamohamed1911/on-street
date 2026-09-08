@@ -41,7 +41,9 @@ const PersonalData = ({ form, isSubmitting }: PersonalDataProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="lg:text-lg md:text-base text-sm text-muted-foreground">Enter your personal details to proceed to the last step.</p>
+      <p className="lg:text-lg md:text-base text-sm text-muted-foreground">
+        Enter your personal details to proceed to the last step.
+      </p>
 
       {/* Phone */}
       <FormField
@@ -145,7 +147,7 @@ const PersonalData = ({ form, isSubmitting }: PersonalDataProps) => {
                           value={letters}
                           onChange={(e) => {
                             const value = e.target.value
-                              .replace(/[^a-zA-Z]/g, "")
+                              .replace(/[^\p{L}]/gu, "")
                               .toUpperCase();
 
                             setLetters(value);
@@ -224,7 +226,9 @@ const PersonalData = ({ form, isSubmitting }: PersonalDataProps) => {
           </FormItem>
         )}
       />
-      <Button type="submit">submit</Button>
+      <Button type="submit" disabled={isSubmitting}>
+        submit
+      </Button>
     </div>
   );
 };

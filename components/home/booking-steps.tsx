@@ -87,11 +87,33 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
 
   const registerMutation = useMutation({
     mutationFn: submitBooking,
+  
     onMutate: () => {
       form.clearErrors();
     },
+  
     onSuccess: () => {},
-    onError: () => {},
+  
+    onError: (error) => {
+      const backendErrors = error;
+  
+      if (!backendErrors) {
+        return;
+      }
+  
+      Object.entries(backendErrors).forEach(
+        ([field, messages]) => {
+          if (!Array.isArray(messages) || messages.length === 0) {
+            return;
+          }
+  
+          form.setError(field as keyof BookingInput, {
+            type: "server",
+            message: messages[0],
+          });
+        },
+      );
+    },
   });
 
   const isSubmitting = registerMutation.isPending;
