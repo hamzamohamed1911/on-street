@@ -115,7 +115,7 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
               <span className="text-[11px] font-medium text-muted-foreground">
                 {t("stepLabel", { number: value })}
               </span>
-              <span className="text-sm font-extrabold text-foreground">
+              <span className="md:text-sm text-[10px] font-extrabold text-foreground">
                 {t(copy.titleKey)}
               </span>
               <span
@@ -144,7 +144,7 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
                 noValidate
               >
                 {value === "1" ? (
-                  <ZoneList zone={zone} error={zoneError} />
+                  <ZoneList form={form} zone={zone} error={zoneError} />
                 ) : (
                   <PersonalData isSubmitting={isSubmitting} form={form} />
                 )}

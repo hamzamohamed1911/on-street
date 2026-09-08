@@ -10,13 +10,16 @@ import type { ParkingZone } from "@/lib/zones";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Button } from "../ui/button";
+import { BookingInput } from "@/lib/schemas/booking.schema";
+import { UseFormReturn } from "react-hook-form";
 
 type ZoneListProps = {
   zone: ParkingZone | null;
   error?: string | null;
+  form: UseFormReturn<BookingInput>;
 };
 
-export function ZoneList({ zone, error }: ZoneListProps) {
+export function ZoneList({ zone, error ,form}: ZoneListProps) {
   const t = useTranslations("HomePage");
 
   const [zoneId, setZoneId] = useQueryState(
@@ -89,7 +92,7 @@ export function ZoneList({ zone, error }: ZoneListProps) {
                       : undefined
               }
               onValueChange={handleTimeChange}
-              className="flex w-full gap-4"
+              className="grid md:grid-cols-3 grid-cols-2 w-full lg:gap-4 md:gap-3 gap-2"
             >
               <Label
                 htmlFor="1"
@@ -117,7 +120,7 @@ export function ZoneList({ zone, error }: ZoneListProps) {
             </RadioGroup>
 
             {hours && hours > 2 ? (
-              <div className="mt-2 max-w-fit items-center justify-center rounded-lg border p-4">
+              <div className="mt-2 md:max-w-fit max-w-full items-center justify-center rounded-lg border p-4">
                <div className="flex flex-col gap-1 border-b pb-2">
                <h3 className="text-start  md:text-base text-sm font-semibold">
                   Select custom time

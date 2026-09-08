@@ -36,8 +36,8 @@ export const createBookingSchema = (t: TranslateFn) =>
     .superRefine((data, ctx) => {
       if (
         !isValidPhoneNumberForCountry(
-          data.phone,
           data.phone_country,
+          data.phone,
         )
       ) {
         ctx.addIssue({

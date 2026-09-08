@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { BackToScan } from "@/components/home/back-to-scan";
 import { BookingPanel } from "@/components/home/booking-panel";
-import { BookingSummary } from "@/components/home/booking-summary";
 import { ZoneCardSkeleton } from "@/components/home/zone-card-skeleton";
 import { routing } from "@/i18n/routing";
 import { fetchZone } from "@/lib/api/zones";
@@ -57,12 +56,9 @@ export default async function BookingPage({ params }: BookingPageProps) {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">
         <BackToScan />
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
-          <section className="rounded-2xl bg-card p-5 text-start text-card-foreground shadow-lg sm:p-6">
             <Suspense fallback={<ZoneCardSkeleton />}>
               <BookingPanel qrId={qr} />
             </Suspense>
-          </section>
-          <BookingSummary />
         </div>
       </div>
     </main>
