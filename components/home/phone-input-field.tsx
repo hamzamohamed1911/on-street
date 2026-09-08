@@ -95,7 +95,7 @@ export type PhoneInputFieldProps = {
   phoneCountry: string;
   phoneNumber: string;
   country?: Country;
-  onPhoneCountryChange: (phoneCountry: string, country: Country) => void;
+  onPhoneCountryChange: (country: Country) => void;
   onPhoneNumberChange: (phoneNumber: string) => void;
   disabled?: boolean;
   placeholder?: string;
@@ -123,7 +123,6 @@ function CountryFlag({
 }
 
 export function PhoneInputField({
-  phoneCountry,
   phoneNumber,
   country: countryProp,
   onPhoneCountryChange,
@@ -161,22 +160,30 @@ export function PhoneInputField({
   }, [labels, search]);
 
   function handleCountrySelect(nextCountry: Country) {
-    const nextPhoneCountry = toPhoneCountry(nextCountry);
     setInternalCountry(nextCountry);
-    onPhoneCountryChange(nextPhoneCountry, nextCountry);
+  
+    // Form/API stores "SA", "EG", "AE", etc.
+    onPhoneCountryChange(nextCountry);
+  
+    // UI/input uses the dialing code
+    const dialCode = toPhoneCountry(nextCountry);
+  
     onPhoneNumberChange(
-      sanitizePhoneNumberInput(nextPhoneCountry, phoneNumber),
+      sanitizePhoneNumberInput(dialCode, phoneNumber),
     );
+  
     setOpen(false);
     setSearch("");
   }
-
   function handlePhoneNumberChange(value: string) {
-    onPhoneNumberChange(sanitizePhoneNumberInput(phoneCountry, value));
+    const dialCode = toPhoneCountry(country);
+  
+    onPhoneNumberChange(
+      sanitizePhoneNumberInput(dialCode, value),
+    );
   }
 
-  const isSaudi = isSaudiPhoneCountry(phoneCountry);
-
+  const isSaudi = country === "SA";
   return (
     <div
       className={cn(
@@ -236,7 +243,7 @@ export function PhoneInputField({
           className="shrink-0 text-base leading-none font-bold text-title md:text-sm"
           aria-hidden
         >
-          {phoneCountry}
+         {toPhoneCountry(country)}
         </span>
         <Input
           type="tel"
