@@ -26,6 +26,7 @@ import {
   createBookingSchema,
 } from "@/lib/schemas/booking.schema";
 import { submitBooking } from "@/lib/api/zones";
+import { BookingSummary } from "./booking-summary";
 
 const stepCopy = {
   "1": {
@@ -87,32 +88,30 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
 
   const registerMutation = useMutation({
     mutationFn: submitBooking,
-  
+
     onMutate: () => {
       form.clearErrors();
     },
-  
+
     onSuccess: () => {},
-  
+
     onError: (error) => {
       const backendErrors = error;
-  
+
       if (!backendErrors) {
         return;
       }
-  
-      Object.entries(backendErrors).forEach(
-        ([field, messages]) => {
-          if (!Array.isArray(messages) || messages.length === 0) {
-            return;
-          }
-  
-          form.setError(field as keyof BookingInput, {
-            type: "server",
-            message: messages[0],
-          });
-        },
-      );
+
+      Object.entries(backendErrors).forEach(([field, messages]) => {
+        if (!Array.isArray(messages) || messages.length === 0) {
+          return;
+        }
+
+        form.setError(field as keyof BookingInput, {
+          type: "server",
+          message: messages[0],
+        });
+      });
     },
   });
 
@@ -122,59 +121,68 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
     registerMutation.mutate(values);
   }
   return (
-    <Tabs
-      dir={dir}
-      value={step}
-      onValueChange={handleStepChange}
-      className="w-full text-start"
-    >
-      <TabsList className="w-full gap-4 sm:gap-8">
-        {BOOKING_STEPS.map((value) => {
-          const copy = stepCopy[value];
+    <>
+      <section className="rounded-2xl bg-card p-5 text-start text-card-foreground shadow-lg sm:p-6">
+        <Tabs
+          dir={dir}
+          value={step}
+          onValueChange={handleStepChange}
+          className="w-full text-start"
+        >
+          <TabsList className="w-full gap-4 sm:gap-8">
+            {BOOKING_STEPS.map((value) => {
+              const copy = stepCopy[value];
 
-          return (
-            <TabsTrigger key={value} value={value} className="group min-w-0">
-              <span className="text-[11px] font-medium text-muted-foreground">
-                {t("stepLabel", { number: value })}
-              </span>
-              <span className="md:text-sm text-[10px] font-extrabold text-foreground">
-                {t(copy.titleKey)}
-              </span>
-              <span
-                className={cn(
-                  "mt-1 h-1.5 w-full rounded-full bg-natural-500 transition-colors",
-                  "group-data-[state=active]:bg-amber-400",
-                )}
-              />
-            </TabsTrigger>
-          );
-        })}
-      </TabsList>
+              return (
+                <TabsTrigger
+                  key={value}
+                  value={value}
+                  className="group min-w-0"
+                >
+                  <span className="text-[11px] font-medium text-muted-foreground">
+                    {t("stepLabel", { number: value })}
+                  </span>
+                  <span className="md:text-sm text-[10px] font-extrabold text-foreground">
+                    {t(copy.titleKey)}
+                  </span>
+                  <span
+                    className={cn(
+                      "mt-1 h-1.5 w-full rounded-full bg-natural-500 transition-colors",
+                      "group-data-[state=active]:bg-amber-400",
+                    )}
+                  />
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
 
-      {BOOKING_STEPS.map((value) => {
-        const copy = stepCopy[value];
+          {BOOKING_STEPS.map((value) => {
+            const copy = stepCopy[value];
 
-        return (
-          <TabsContent key={value} value={value} className="pt-1">
-            <h2 className="text-lg font-extrabold text-foreground">
-              {t(copy.contentTitleKey)}
-            </h2>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-                noValidate
-              >
-                {value === "1" ? (
-                  <ZoneList form={form} zone={zone} error={zoneError} />
-                ) : (
-                  <PersonalData isSubmitting={isSubmitting} form={form} />
-                )}
-              </form>
-            </Form>
-          </TabsContent>
-        );
-      })}
-    </Tabs>
+            return (
+              <TabsContent key={value} value={value} className="pt-1">
+                <h2 className="text-lg font-extrabold text-foreground">
+                  {t(copy.contentTitleKey)}
+                </h2>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
+                    noValidate
+                  >
+                    {value === "1" ? (
+                      <ZoneList form={form} zone={zone} error={zoneError} />
+                    ) : (
+                      <PersonalData isSubmitting={isSubmitting} form={form} />
+                    )}
+                  </form>
+                </Form>
+              </TabsContent>
+            );
+          })}
+        </Tabs>
+      </section>
+      <BookingSummary zone={zone} form={form} />
+    </>
   );
 }

@@ -37,3 +37,19 @@ export async function submitBooking(
 
   return data;
 }
+export async function submitcheckout(
+  bookingBody: BookingInput,
+): Promise<BookingQuoteResponse> {
+  const response = await fetch(`${API_URL}/api/public/bookings/checkout/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(bookingBody),
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw data;
+  }
+
+  return data;
+}

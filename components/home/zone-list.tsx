@@ -33,11 +33,12 @@ export function ZoneList({
 
   const [hours, setHours] = useQueryState(
     "hours",
-    parseAsInteger.withOptions({
-      history: "replace",
-    }),
+    parseAsInteger
+      .withDefault(1)
+      .withOptions({
+        history: "replace",
+      }),
   );
-
   // Sync zone from URL -> form
   useEffect(() => {
     if (zone && zoneId !== zone.id) {
