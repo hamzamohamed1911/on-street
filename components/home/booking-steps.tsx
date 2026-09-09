@@ -86,6 +86,20 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
     defaultValues: bookingDefaultValues,
   });
 
+  const handleNextFromZone = async () => {
+    const isValid = await form.trigger(["zone", "hours"]);
+  
+    if (!isValid) {
+      return;
+    }
+  
+    void setStep("2");
+  };
+
+  const handleBackToZone = () => {
+    void setStep("1");
+  };
+
   const registerMutation = useMutation({
     mutationFn: submitBooking,
 
@@ -93,7 +107,13 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
       form.clearErrors();
     },
 
-    onSuccess: () => {},
+    onSuccess: (data) => {
+
+      if (data.redirect_url) {
+        window.location.href = data.redirect_url;
+        return;
+      }
+    },
 
     onError: (error) => {
       const backendErrors = error;
@@ -118,7 +138,10 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
   const isSubmitting = registerMutation.isPending;
 
   function onSubmit(values: BookingInput) {
-    registerMutation.mutate(values);
+    registerMutation.mutate({
+      ...values,
+      shopper_result_url: `${process.env.NEXT_PUBLIC_API_URL}/${locale}/payment/result`,
+    });
   }
   return (
     <>
@@ -137,7 +160,7 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
                 <TabsTrigger
                   key={value}
                   value={value}
-                  className="group min-w-0"
+                   className="pointer-events-none group min-w-0"
                 >
                   <span className="text-[11px] font-medium text-muted-foreground">
                     {t("stepLabel", { number: value })}
@@ -171,9 +194,18 @@ export function BookingSteps({ zone, zoneError }: BookingStepsProps) {
                     noValidate
                   >
                     {value === "1" ? (
-                      <ZoneList form={form} zone={zone} error={zoneError} />
+                      <ZoneList
+                        onNext={handleNextFromZone}
+                        form={form}
+                        zone={zone}
+                        error={zoneError}
+                      />
                     ) : (
-                      <PersonalData isSubmitting={isSubmitting} form={form} />
+                      <PersonalData
+                        onBack={handleBackToZone}
+                        isSubmitting={isSubmitting}
+                        form={form}
+                      />
                     )}
                   </form>
                 </Form>

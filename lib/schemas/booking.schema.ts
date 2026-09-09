@@ -1,44 +1,24 @@
 import { z } from "zod";
 
-import {
-  isValidPhoneNumberForCountry,
-} from "@/lib/utils/phone";
+import { isValidPhoneNumberForCountry } from "@/lib/utils/phone";
 
 type TranslateFn = (key: string) => string;
 export const createBookingSchema = (t: TranslateFn) =>
   z
     .object({
-      zone: z
-        .number()
-        .int()
-        .positive(t("validation-zone-required")),
+      zone: z.number().int().positive(t("validation-zone-required")),
 
-      plate: z
-        .string()
-        .trim()
-        .min(1, t("validation-plate-required")),
+      plate: z.string().trim().min(1, t("validation-plate-required")),
 
-      phone_country: z
-        .string()
-        .min(1, t("validation-field-required")),
+      phone_country: z.string().min(1, t("validation-field-required")),
 
-      phone: z
-        .string()
-        .trim()
-        .min(1, t("validation-phone-required")),
+      phone: z.string().trim().min(1, t("validation-phone-required")),
 
-      hours: z
-        .number()
-        .int()
-        .positive(t("validation-hours-required")),
+      hours: z.number().int().positive(t("validation-hours-required")),
+      shopper_result_url: z.string().url().optional(),
     })
     .superRefine((data, ctx) => {
-      if (
-        !isValidPhoneNumberForCountry(
-          data.phone_country,
-          data.phone,
-        )
-      ) {
+      if (!isValidPhoneNumberForCountry(data.phone_country, data.phone)) {
         ctx.addIssue({
           code: "custom",
           path: ["phone"],
@@ -47,14 +27,12 @@ export const createBookingSchema = (t: TranslateFn) =>
       }
     });
 
-export type BookingInput = z.infer<
-  ReturnType<typeof createBookingSchema>
->;
+export type BookingInput = z.infer<ReturnType<typeof createBookingSchema>>;
 
 export const bookingDefaultValues: BookingInput = {
   zone: 0,
   plate: "",
   phone: "",
   phone_country: "SA",
-  hours: 0,
+  hours: 1,
 };

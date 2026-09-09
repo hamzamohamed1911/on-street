@@ -15,13 +15,10 @@ type ZoneListProps = {
   zone: ParkingZone | null;
   error?: string | null;
   form: UseFormReturn<BookingInput>;
+  onNext: () => void;
 };
 
-export function ZoneList({
-  zone,
-  error,
-  form,
-}: ZoneListProps) {
+export function ZoneList({ zone, error, form, onNext }: ZoneListProps) {
   const t = useTranslations("HomePage");
 
   const [zoneId, setZoneId] = useQueryState(
@@ -33,11 +30,9 @@ export function ZoneList({
 
   const [hours, setHours] = useQueryState(
     "hours",
-    parseAsInteger
-      .withDefault(1)
-      .withOptions({
-        history: "replace",
-      }),
+    parseAsInteger.withDefault(1).withOptions({
+      history: "replace",
+    }),
   );
   // Sync zone from URL -> form
   useEffect(() => {
@@ -53,7 +48,6 @@ export function ZoneList({
     }
   }, [zone, zoneId, setZoneId, form]);
 
-  // Sync hours from URL -> form
   useEffect(() => {
     if (hours && hours > 0) {
       form.setValue("hours", hours, {
@@ -64,9 +58,7 @@ export function ZoneList({
   }, [hours, form]);
 
   const handleTimeChange = (value: string) => {
-    const selectedHours = value === "select"
-      ? 3
-      : Number(value);
+    const selectedHours = value === "select" ? 3 : Number(value);
 
     void setHours(selectedHours);
 
@@ -115,24 +107,17 @@ export function ZoneList({
         {t("zoneTimeDescription")}
       </p>
 
-      {error ? (
-        <p className="mt-4 text-xs text-destructive">
-          {error}
-        </p>
-      ) : null}
+      {error ? <p className="mt-4 text-xs text-destructive">{error}</p> : null}
 
       {zone ? (
         <div className="mt-4 flex flex-col gap-4">
           <ZoneCard zone={zone} />
 
           <div className="flex flex-col gap-2">
-            <h2 className="text-sm font-bold md:text-lg">
-              Select time slot
-            </h2>
+            <h2 className="text-sm font-bold md:text-lg">Select time slot</h2>
 
             <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
-              Select parking time. Use custom to select your own
-              time slot.
+              Select parking time. Use custom to select your own time slot.
             </p>
 
             <RadioGroup
@@ -168,10 +153,7 @@ export function ZoneList({
                 htmlFor="select"
                 className="flex w-full cursor-pointer items-center gap-2 rounded-lg border p-4 has-data-[state=checked]:border-primary"
               >
-                <RadioGroupItem
-                  value="select"
-                  id="select"
-                />
+                <RadioGroupItem value="select" id="select" />
                 <span>Select</span>
               </Label>
             </RadioGroup>
@@ -211,10 +193,7 @@ export function ZoneList({
                 </div>
 
                 <div className="border-t pt-2">
-                  <Button
-                    type="button"
-                    className="w-full rounded-full"
-                  >
+                  <Button type="button" className="w-full rounded-full">
                     Confirm
                   </Button>
                 </div>
@@ -230,6 +209,12 @@ export function ZoneList({
           </div>
         </div>
       ) : null}
+      <div className="w-full mt-4 flex justify-end items-end">
+      <Button className="min-w-28" type="button" onClick={onNext}>
+        Next
+      </Button> 
+      </div>
+    
     </div>
   );
 }

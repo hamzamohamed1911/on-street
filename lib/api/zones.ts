@@ -20,27 +20,13 @@ type BookingQuoteResponse = {
   total?: number;
   detail?: string;
   [key: string]: unknown;
+  redirect_url?:string;
+  shopper_result_url:string;
 };
 export async function submitBooking(
   bookingBody: BookingInput,
 ): Promise<BookingQuoteResponse> {
-  const response = await fetch(`${API_URL}/public/bookings/quote/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(bookingBody),
-  });
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw data;
-  }
-
-  return data;
-}
-export async function submitcheckout(
-  bookingBody: BookingInput,
-): Promise<BookingQuoteResponse> {
-  const response = await fetch(`${API_URL}/api/public/bookings/checkout/`, {
+  const response = await fetch(`${API_URL}/public/bookings/checkout/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(bookingBody),

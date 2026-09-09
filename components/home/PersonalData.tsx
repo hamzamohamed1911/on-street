@@ -22,9 +22,14 @@ import { Button } from "../ui/button";
 type PersonalDataProps = {
   form: UseFormReturn<BookingInput>;
   isSubmitting: boolean;
+  onBack: () => void;
 };
 
-const PersonalData = ({ form, isSubmitting }: PersonalDataProps) => {
+const PersonalData = ({
+  form,
+  isSubmitting,
+  onBack,
+}: PersonalDataProps) => {
   type Country = CountryCode;
 
   const DEFAULT_COUNTRY: Country = "SA";
@@ -82,7 +87,6 @@ const PersonalData = ({ form, isSubmitting }: PersonalDataProps) => {
         )}
       />
 
-     
       <FormField
         control={form.control}
         name="plate"
@@ -226,9 +230,19 @@ const PersonalData = ({ form, isSubmitting }: PersonalDataProps) => {
           </FormItem>
         )}
       />
-      <Button type="submit" disabled={isSubmitting}>
-        submit
-      </Button>
+      <div className="flex justify-between w-full">
+        <Button
+        onClick={()=>onBack()}
+          className="text-primary border-primary border-2 font-semibold min-w-28 hover:text-primary"
+          variant="outline"
+          type="button"
+        >
+          back
+        </Button>
+        <Button type="submit" className="min-w-28" disabled={isSubmitting}>
+          submit
+        </Button>
+      </div>
     </div>
   );
 };
