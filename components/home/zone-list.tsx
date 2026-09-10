@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { ZoneCard } from "@/components/home/zone-card";
@@ -10,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Button } from "../ui/button";
 import { BookingInput } from "@/lib/schemas/booking.schema";
 import { UseFormReturn } from "react-hook-form";
+import { getLocaleDirection } from "@/i18n/routing";
 
 type ZoneListProps = {
   zone: ParkingZone | null;
@@ -20,7 +21,8 @@ type ZoneListProps = {
 
 export function ZoneList({ zone, error, form, onNext }: ZoneListProps) {
   const t = useTranslations("HomePage");
-
+  const locale = useLocale()
+  const dir = getLocaleDirection(locale);
   const [zoneId, setZoneId] = useQueryState(
     "zone",
     parseAsInteger.withOptions({
@@ -72,7 +74,7 @@ export function ZoneList({ zone, error, form, onNext }: ZoneListProps) {
   const increaseHours = () => {
     const nextHours = (hours ?? 3) + 1;
 
-    if (nextHours > 24) {
+    if (nextHours > 8) {
       return;
     }
 
@@ -114,13 +116,16 @@ export function ZoneList({ zone, error, form, onNext }: ZoneListProps) {
           <ZoneCard zone={zone} />
 
           <div className="flex flex-col gap-2">
-            <h2 className="text-sm font-bold md:text-lg">Select time slot</h2>
+            <h2 className="text-sm font-bold md:text-lg">
+              {t("select-time-slot")}
+            </h2>
 
             <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
               Select parking time. Use custom to select your own time slot.
             </p>
 
             <RadioGroup
+            dir={dir}
               value={
                 hours === 1
                   ? "1"
@@ -154,7 +159,7 @@ export function ZoneList({ zone, error, form, onNext }: ZoneListProps) {
                 className="flex w-full cursor-pointer items-center gap-2 rounded-lg border p-4 has-data-[state=checked]:border-primary"
               >
                 <RadioGroupItem value="select" id="select" />
-                <span>Select</span>
+                <span>{t("select")}</span>
               </Label>
             </RadioGroup>
 
@@ -166,7 +171,7 @@ export function ZoneList({ zone, error, form, onNext }: ZoneListProps) {
                   </h3>
 
                   <p className="text-center text-xs text-muted-foreground md:text-sm">
-                    (Max Time selection: 24H)
+                    (Max Time selection: 8H)
                   </p>
                 </div>
 
@@ -192,11 +197,7 @@ export function ZoneList({ zone, error, form, onNext }: ZoneListProps) {
                   </button>
                 </div>
 
-                <div className="border-t pt-2">
-                  <Button type="button" className="w-full rounded-full">
-                    Confirm
-                  </Button>
-                </div>
+              
               </div>
             ) : null}
 
@@ -210,11 +211,10 @@ export function ZoneList({ zone, error, form, onNext }: ZoneListProps) {
         </div>
       ) : null}
       <div className="w-full mt-4 flex justify-end items-end">
-      <Button className="min-w-28" type="button" onClick={onNext}>
-        Next
-      </Button> 
+        <Button className="min-w-28" type="button" onClick={onNext}>
+          Next
+        </Button>
       </div>
-    
     </div>
   );
 }

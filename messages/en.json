@@ -43,10 +43,11 @@
     "validation-hours-required": "Please select the parking duration.",
     "validation-phone-invalid": "Please enter a valid phone number.",
     "phone-country-search": "Search for a country",
-    "contact-information":"Contact information",
-    "plate-number":"Plate number",
-    "plate-order":"Please make sure to enter the plate number on the same order as on your plate"
-
+    "contact-information": "Contact information",
+    "plate-number": "Plate number",
+    "plate-order": "Please make sure to enter the plate number on the same order as on your plate",
+    "select-time-slot": "Select time slot",
+    "select": "Select"
   },
   "Header": {
     "logoAlt": "On Street Parking",

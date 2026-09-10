@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
-export async function BrandLogo() {
-  const t = await getTranslations("Header");
+export  function BrandLogo() {
+  const t =  useTranslations("Header");
 
   return (
     <Link
